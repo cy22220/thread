@@ -30,10 +30,10 @@ void *fun(void *arg)
 
 	c = 0;
 	while (c < GET_COUNT)
-	{
+	{ 
 		if (pthread_mutex_trylock(&mutex0) == 0)
 		{
-			if (pthread_mutex_trylock(&mutex1) == 0)
+			if (pthread_mutex_trylock(&mutex2) == 0)
 			{
 				for (int j = 0; j < TIME_COUNT; j++)
 				{
@@ -41,8 +41,8 @@ void *fun(void *arg)
 					clock_gettime(CLOCK_REALTIME,&ts[thn][(c * TIME_COUNT) + j]);
 				}
 				c++;
+				pthread_mutex_unlock(&mutex2);
 				pthread_mutex_unlock(&mutex0);
-				pthread_mutex_unlock(&mutex1);
 				busy();
 			}
 			else
@@ -59,8 +59,8 @@ void *fun(void *arg)
 					clock_gettime(CLOCK_REALTIME,&ts[thn][(c * TIME_COUNT) + j]);
 				}
 				c++;
-				pthread_mutex_unlock(&mutex1);
 				pthread_mutex_unlock(&mutex2);
+				pthread_mutex_unlock(&mutex1);
 				busy();
 			}
 			else
